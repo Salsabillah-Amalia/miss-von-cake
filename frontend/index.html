@@ -175,6 +175,12 @@
             transform: scale(1.1);
         }
 
+        .add-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .product-info {
             padding: 20px;
         }
@@ -197,6 +203,34 @@
             color: #666;
             margin: 8px 0;
             line-height: 1.4;
+        }
+
+        .stock-info {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .out-of-stock {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #dc3545;
+            background: #f8d7da;
+            border-radius: 10px;
+            margin: 20px 0;
         }
 
         /* Modal Styles */
@@ -309,6 +343,11 @@
             background: #218838;
         }
 
+        .checkout-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
         .total-section {
             background: #f8f9fa;
             padding: 20px;
@@ -385,130 +424,13 @@
     <section class="products-section">
         <div class="container">
             <h2 class="section-title">Our Best Seller</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/strawberry-chiffon-cake.jpg')">
-                        <button class="add-btn" onclick="addToCart('Strawberry Chiffon Cake', 25000, 'images/strawberry-chiffon-cake.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Strawberry Chiffon Cake</div>
-                        <div class="product-description">Kue chiffon lembut dengan topping strawberry segar dan whipped cream</div>
-                        <div class="product-price">Rp 25.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/lotus-biscoff-cheesecake.jpg')">
-                        <button class="add-btn" onclick="addToCart('Lotus Biscoff Cheesecake', 28000, 'images/lotus-biscoff-cheesecake.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Lotus Biscoff Cheesecake</div>
-                        <div class="product-description">Cheesecake creamy dengan crumble lotus biscoff yang renyah</div>
-                        <div class="product-price">Rp 28.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/whoopie-pie-chocolate.jpg')">
-                        <button class="add-btn" onclick="addToCart('Whoopie Pie Chocolate', 20000, 'images/whoopie-pie-chocolate.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Whoopie Pie Chocolate</div>
-                        <div class="product-description">Kue sandwich coklat dengan filling cream cheese yang lembut</div>
-                        <div class="product-price">Rp 20.000,00</div>
-                    </div>
-                </div>
+            <div id="bestsellerProducts" class="products-grid">
+                <div class="loading">Memuat produk...</div>
             </div>
 
             <h2 class="section-title">Semua Menu</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/strawberry-shortcake.jpg')">
-                        <button class="add-btn" onclick="addToCart('Strawberry Shortcake', 60000, 'images/strawberry-shortcake.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Strawberry Shortcake</div>
-                        <div class="product-description">Kue spons lembut berlapis whipped cream dan strawberry segar</div>
-                        <div class="product-price">Rp 60.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/chocolate-cupcake.jpg')">
-                        <button class="add-btn" onclick="addToCart('Chocolate Cupcake', 30000, 'images/chocolate-cupcake.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Chocolate Cupcake</div>
-                        <div class="product-description">Cupcake coklat dengan frosting buttercream dan topping cherry</div>
-                        <div class="product-price">Rp 30.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/choco-sponge-cake.jpg')">
-                        <button class="add-btn" onclick="addToCart('Choco Sponge Cake', 40000, 'images/choco-sponge-cake.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Choco Sponge Cake</div>
-                        <div class="product-description">Kue spons coklat dengan lapisan cream dan hiasan buah</div>
-                        <div class="product-price">Rp 40.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/rainbow-macaron.jpg')">
-                        <button class="add-btn" onclick="addToCart('Rainbow Macaron', 30000, 'images/rainbow-macaron.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Rainbow Macaron</div>
-                        <div class="product-description">Set macaron warna-warni dengan berbagai rasa dalam satu box</div>
-                        <div class="product-price">Rp 30.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/matcha-berry-shortcake.jpg')">
-                        <button class="add-btn" onclick="addToCart('Matcha Berry Shortcake', 30000, 'images/matcha-berry-shortcake.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Matcha Berry Shortcake</div>
-                        <div class="product-description">Perpaduan matcha dan berry dalam kue yang menyegarkan</div>
-                        <div class="product-price">Rp 30.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/lovely-cookies.jpg')">
-                        <button class="add-btn" onclick="addToCart('Lovely Cookies', 20000, 'images/lovely-cookies.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Lovely Cookies</div>
-                        <div class="product-description">Cookies manis dengan bentuk hati dan dekorasi yang menggemaskan</div>
-                        <div class="product-price">Rp 20.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/pudding-caramel.jpg')">
-                        <button class="add-btn" onclick="addToCart('Pudding Caramel', 15000, 'images/pudding-caramel.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Pudding Caramel</div>
-                        <div class="product-description">Pudding lembut dengan saus caramel yang manis</div>
-                        <div class="product-price">Rp 15.000,00</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('images/mixed-donuts.jpg')">
-                        <button class="add-btn" onclick="addToCart('Mixed Donuts', 50000, 'images/mixed-donuts.jpg')">+</button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">Mixed Donuts</div>
-                        <div class="product-description">Paket donut dengan berbagai topping dan rasa dalam satu box</div>
-                        <div class="product-price">Rp 50.000,00</div>
-                    </div>
-                </div>
+            <div id="allProducts" class="products-grid">
+                <div class="loading">Memuat produk...</div>
             </div>
         </div>
     </section>
@@ -525,7 +447,7 @@
                 <div class="total-price" id="totalPrice">Total: Rp 0</div>
             </div>
             <input type="text" class="table-input" id="tableNumber" placeholder="Nomor Meja" />
-            <button class="checkout-btn" onclick="checkout()">Beli</button>
+            <button class="checkout-btn" id="checkoutBtn" onclick="checkout()">Beli</button>
         </div>
     </div>
 
@@ -544,17 +466,102 @@
     <script>
         let cart = [];
         let cartCount = 0;
+        let products = [];
 
-        function addToCart(name, price, image) {
-            const existingItem = cart.find(item => item.name === name);
+        // API Base URL
+        const API_BASE = '/api';
+
+        // Load products from API
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    products = result.data;
+                    renderProducts();
+                } else {
+                    showError('Gagal memuat produk: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showError('Gagal memuat produk. Periksa koneksi internet Anda.');
+            }
+        }
+
+        // Render products to the page
+        function renderProducts() {
+            const bestsellerContainer = document.getElementById('bestsellerProducts');
+            const allProductsContainer = document.getElementById('allProducts');
+            
+            // Filter bestseller products
+            const bestsellerProducts = products.filter(product => product.category === 'bestseller');
+            const allProducts = products.filter(product => product.category === 'all');
+            
+            bestsellerContainer.innerHTML = bestsellerProducts.map(product => createProductCard(product)).join('');
+            allProductsContainer.innerHTML = allProducts.map(product => createProductCard(product)).join('');
+        }
+
+        // Create product card HTML
+        function createProductCard(product) {
+            const isOutOfStock = product.stock <= 0;
+            
+            return `
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('${product.image}')">
+                        <button class="add-btn" 
+                                onclick="addToCart(${product.id})" 
+                                ${isOutOfStock ? 'disabled' : ''}>
+                            ${isOutOfStock ? '×' : '+'}
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                        <div class="stock-info ${isOutOfStock ? 'out-of-stock' : ''}">
+                            ${isOutOfStock ? 'Stok habis' : `Stok: ${product.stock}`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorHTML = `<div class="error">${message}</div>`;
+            document.getElementById('bestsellerProducts').innerHTML = errorHTML;
+            document.getElementById('allProducts').innerHTML = errorHTML;
+        }
+
+        // Add product to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                alert('Produk tidak ditemukan!');
+                return;
+            }
+            
+            if (product.stock <= 0) {
+                alert('Maaf, produk ini sedang habis!');
+                return;
+            }
+            
+            const existingItem = cart.find(item => item.productId === productId);
             
             if (existingItem) {
+                if (existingItem.quantity >= product.stock) {
+                    alert(`Maaf, stok ${product.name} hanya tersedia ${product.stock} buah!`);
+                    return;
+                }
                 existingItem.quantity += 1;
             } else {
                 cart.push({
-                    name: name,
-                    price: price,
-                    image: image,
+                    productId: productId,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
                     quantity: 1
                 });
             }
@@ -570,6 +577,7 @@
             }, 200);
         }
 
+        // Update cart display
         function updateCartDisplay() {
             document.getElementById('cartCount').textContent = cartCount;
             
@@ -608,12 +616,22 @@
             totalPriceElement.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
         }
 
+        // Increase quantity
         function increaseQuantity(index) {
-            cart[index].quantity++;
+            const cartItem = cart[index];
+            const product = products.find(p => p.id === cartItem.productId);
+            
+            if (cartItem.quantity >= product.stock) {
+                alert(`Maaf, stok ${product.name} hanya tersedia ${product.stock} buah!`);
+                return;
+            }
+            
+            cartItem.quantity++;
             cartCount++;
             updateCartDisplay();
         }
 
+        // Decrease quantity
         function decreaseQuantity(index) {
             if (cart[index].quantity > 1) {
                 cart[index].quantity--;
@@ -625,16 +643,19 @@
             updateCartDisplay();
         }
 
+        // Open cart modal
         function openCart() {
             updateCartDisplay();
             document.getElementById('cartModal').style.display = 'block';
         }
 
+        // Close cart modal
         function closeCart() {
             document.getElementById('cartModal').style.display = 'none';
         }
 
-        function checkout() {
+        // Checkout function
+        async function checkout() {
             const tableNumber = document.getElementById('tableNumber').value.trim();
             
             if (!tableNumber) {
@@ -647,40 +668,86 @@
                 return;
             }
             
-            // Generate order summary
+            // Disable checkout button
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            checkoutBtn.disabled = true;
+            checkoutBtn.textContent = 'Memproses...';
+            
+            try {
+                // Prepare order data
+                const orderData = {
+                    tableNumber: tableNumber,
+                    items: cart.map(item => ({
+                        productId: item.productId,
+                        quantity: item.quantity
+                    }))
+                };
+                
+                // Send order to API
+                const response = await fetch(`${API_BASE}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Generate order summary
+                    generateOrderSummary(result.data);
+                    
+                    // Close cart modal and show thank you modal
+                    closeCart();
+                    document.getElementById('thankYouModal').style.display = 'block';
+                    
+                    // Reset cart
+                    cart = [];
+                    cartCount = 0;
+                    updateCartDisplay();
+                    document.getElementById('tableNumber').value = '';
+                    
+                    // Reload products to update stock
+                    await loadProducts();
+                } else {
+                    alert('Gagal membuat pesanan: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error creating order:', error);
+                alert('Gagal membuat pesanan. Periksa koneksi internet Anda.');
+            } finally {
+                // Re-enable checkout button
+                checkoutBtn.disabled = false;
+                checkoutBtn.textContent = 'Beli';
+            }
+        }
+
+        // Generate order summary
+        function generateOrderSummary(orderData) {
             let orderSummary = `<h3>Ringkasan Pesanan</h3>`;
-            orderSummary += `<p><strong>Nomor Meja:</strong> ${tableNumber}</p><br>`;
+            orderSummary += `<p><strong>ID Pesanan:</strong> ${orderData.id}</p>`;
+            orderSummary += `<p><strong>Nomor Meja:</strong> ${orderData.tableNumber}</p>`;
+            orderSummary += `<p><strong>Status:</strong> ${orderData.status}</p><br>`;
             orderSummary += `<div style="text-align: left;">`;
             
-            let total = 0;
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+            orderData.items.forEach(item => {
                 orderSummary += `<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <span>${item.name} x${item.quantity}</span>
-                    <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                    <span>Rp ${item.subtotal.toLocaleString('id-ID')}</span>
                 </div>`;
             });
             
             orderSummary += `</div><hr style="margin: 15px 0;">`;
             orderSummary += `<div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; color: #d63384;">
                 <span>Total:</span>
-                <span>Rp ${total.toLocaleString('id-ID')}</span>
+                <span>Rp ${orderData.totalPrice.toLocaleString('id-ID')}</span>
             </div>`;
             
             document.getElementById('orderSummary').innerHTML = orderSummary;
-            
-            // Close cart modal and show thank you modal
-            closeCart();
-            document.getElementById('thankYouModal').style.display = 'block';
-            
-            // Reset cart
-            cart = [];
-            cartCount = 0;
-            updateCartDisplay();
-            document.getElementById('tableNumber').value = '';
         }
 
+        // Close thank you modal
         function closeThankYou() {
             document.getElementById('thankYouModal').style.display = 'none';
         }
@@ -698,8 +765,11 @@
             }
         }
 
-        // Initialize cart display
-        updateCartDisplay();
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            updateCartDisplay();
+        });
     </script>
 </body>
 </html>
