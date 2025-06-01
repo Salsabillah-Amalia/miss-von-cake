@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miss Von Creme - Toko Roti Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffb3d9 0%, #ff99cc 50%, #ffccdd 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cart-btn {
+            background: #d63384;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cart-btn:hover {
+            background: #b02a5b;
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            background: #fff;
+            color: #d63384;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(255,255,255,0.1), rgba(255,192,203,0.3));
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .ribbon {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0,0 L90,0 L100,10 L90,20 L0,20 Z" fill="%23d63384"/></svg>') repeat-x;
+            height: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #d63384;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .hero-image {
+            width: 300px;
+            height: 250px;
+            background: url('images/hero-cake.jpg') center/cover;
+            border-radius: 15px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .products-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #d63384;
+            margin-bottom: 50px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .add-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #d63384;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: #b02a5b;
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: #d63384;
+            font-weight: bold;
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #d63384;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            background: #d63384;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .qty-display {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .table-input {
+            width: 200px;
+            padding: 12px;
+            border: 2px solid #d63384;
+            border-radius: 10px;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+
+        .checkout-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: #218838;
+        }
+
+        .total-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d63384;
+            text-align: right;
+        }
+
+        .thank-you {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .thank-you h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .order-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Miss Von Creme</div>
+                <button class="cart-btn" onclick="openCart()">
+                    🛒 Keranjang
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="ribbon"></div>
+            <h1>Taste the Royal Sweetness</h1>
+            <p>Rasakan Momen Berharga dengan Sentuhan Manis dari Miss Von Creme</p>
+            <div class="hero-image"></div>
+        </div>
+    </section>
+
+    <section class="products-section">
+        <div class="container">
+            <h2 class="section-title">Our Best Seller</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/strawberry-chiffon-cake.jpg')">
+                        <button class="add-btn" onclick="addToCart('Strawberry Chiffon Cake', 25000, 'images/strawberry-chiffon-cake.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Strawberry Chiffon Cake</div>
+                        <div class="product-description">Kue chiffon lembut dengan topping strawberry segar dan whipped cream</div>
+                        <div class="product-price">Rp 25.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/lotus-biscoff-cheesecake.jpg')">
+                        <button class="add-btn" onclick="addToCart('Lotus Biscoff Cheesecake', 28000, 'images/lotus-biscoff-cheesecake.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Lotus Biscoff Cheesecake</div>
+                        <div class="product-description">Cheesecake creamy dengan crumble lotus biscoff yang renyah</div>
+                        <div class="product-price">Rp 28.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/whoopie-pie-chocolate.jpg')">
+                        <button class="add-btn" onclick="addToCart('Whoopie Pie Chocolate', 20000, 'images/whoopie-pie-chocolate.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Whoopie Pie Chocolate</div>
+                        <div class="product-description">Kue sandwich coklat dengan filling cream cheese yang lembut</div>
+                        <div class="product-price">Rp 20.000,00</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Semua Menu</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/strawberry-shortcake.jpg')">
+                        <button class="add-btn" onclick="addToCart('Strawberry Shortcake', 60000, 'images/strawberry-shortcake.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Strawberry Shortcake</div>
+                        <div class="product-description">Kue spons lembut berlapis whipped cream dan strawberry segar</div>
+                        <div class="product-price">Rp 60.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/chocolate-cupcake.jpg')">
+                        <button class="add-btn" onclick="addToCart('Chocolate Cupcake', 30000, 'images/chocolate-cupcake.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Chocolate Cupcake</div>
+                        <div class="product-description">Cupcake coklat dengan frosting buttercream dan topping cherry</div>
+                        <div class="product-price">Rp 30.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/choco-sponge-cake.jpg')">
+                        <button class="add-btn" onclick="addToCart('Choco Sponge Cake', 40000, 'images/choco-sponge-cake.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Choco Sponge Cake</div>
+                        <div class="product-description">Kue spons coklat dengan lapisan cream dan hiasan buah</div>
+                        <div class="product-price">Rp 40.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/rainbow-macaron.jpg')">
+                        <button class="add-btn" onclick="addToCart('Rainbow Macaron', 30000, 'images/rainbow-macaron.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Rainbow Macaron</div>
+                        <div class="product-description">Set macaron warna-warni dengan berbagai rasa dalam satu box</div>
+                        <div class="product-price">Rp 30.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/matcha-berry-shortcake.jpg')">
+                        <button class="add-btn" onclick="addToCart('Matcha Berry Shortcake', 30000, 'images/matcha-berry-shortcake.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Matcha Berry Shortcake</div>
+                        <div class="product-description">Perpaduan matcha dan berry dalam kue yang menyegarkan</div>
+                        <div class="product-price">Rp 30.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/lovely-cookies.jpg')">
+                        <button class="add-btn" onclick="addToCart('Lovely Cookies', 20000, 'images/lovely-cookies.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Lovely Cookies</div>
+                        <div class="product-description">Cookies manis dengan bentuk hati dan dekorasi yang menggemaskan</div>
+                        <div class="product-price">Rp 20.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/pudding-caramel.jpg')">
+                        <button class="add-btn" onclick="addToCart('Pudding Caramel', 15000, 'images/pudding-caramel.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Pudding Caramel</div>
+                        <div class="product-description">Pudding lembut dengan saus caramel yang manis</div>
+                        <div class="product-price">Rp 15.000,00</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/mixed-donuts.jpg')">
+                        <button class="add-btn" onclick="addToCart('Mixed Donuts', 50000, 'images/mixed-donuts.jpg')">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Mixed Donuts</div>
+                        <div class="product-description">Paket donut dengan berbagai topping dan rasa dalam satu box</div>
+                        <div class="product-price">Rp 50.000,00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 Keranjang</h2>
+                <span class="close" onclick="closeCart()">&times;</span>
+            </div>
+            <div id="cartItems"></div>
+            <div class="total-section">
+                <div class="total-price" id="totalPrice">Total: Rp 0</div>
+            </div>
+            <input type="text" class="table-input" id="tableNumber" placeholder="Nomor Meja" />
+            <button class="checkout-btn" onclick="checkout()">Beli</button>
+        </div>
+    </div>
+
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" class="modal">
+        <div class="modal-content">
+            <div class="thank-you">
+                <h2>Terima Kasih!</h2>
+                <p>Mohon tunggu sebentar sampai pelayan membawa pesanan anda, kepuasan anda adalah prioritas kami</p>
+                <div class="order-summary" id="orderSummary"></div>
+                <button class="checkout-btn" onclick="closeThankYou()" style="margin-top: 30px;">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let cartCount = 0;
+
+        function addToCart(name, price, image) {
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    name: name,
+                    price: price,
+                    image: image,
+                    quantity: 1
+                });
+            }
+            
+            cartCount++;
+            updateCartDisplay();
+            
+            // Animation effect
+            const cartBtn = document.querySelector('.cart-btn');
+            cartBtn.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                cartBtn.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function updateCartDisplay() {
+            document.getElementById('cartCount').textContent = cartCount;
+            
+            const cartItemsContainer = document.getElementById('cartItems');
+            const totalPriceElement = document.getElementById('totalPrice');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Keranjang kosong</p>';
+                totalPriceElement.textContent = 'Total: Rp 0';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div style="color: #d63384; font-weight: bold;">Rp ${item.price.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="qty-btn" onclick="decreaseQuantity(${index})">-</button>
+                            <span class="qty-display">${item.quantity}</span>
+                            <button class="qty-btn" onclick="increaseQuantity(${index})">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItemsContainer.innerHTML = html;
+            totalPriceElement.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function increaseQuantity(index) {
+            cart[index].quantity++;
+            cartCount++;
+            updateCartDisplay();
+        }
+
+        function decreaseQuantity(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+                cartCount--;
+            } else {
+                cart.splice(index, 1);
+                cartCount--;
+            }
+            updateCartDisplay();
+        }
+
+        function openCart() {
+            updateCartDisplay();
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function checkout() {
+            const tableNumber = document.getElementById('tableNumber').value.trim();
+            
+            if (!tableNumber) {
+                alert('Mohon isi nomor meja!');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Keranjang masih kosong!');
+                return;
+            }
+            
+            // Generate order summary
+            let orderSummary = `<h3>Ringkasan Pesanan</h3>`;
+            orderSummary += `<p><strong>Nomor Meja:</strong> ${tableNumber}</p><br>`;
+            orderSummary += `<div style="text-align: left;">`;
+            
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                orderSummary += `<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                </div>`;
+            });
+            
+            orderSummary += `</div><hr style="margin: 15px 0;">`;
+            orderSummary += `<div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; color: #d63384;">
+                <span>Total:</span>
+                <span>Rp ${total.toLocaleString('id-ID')}</span>
+            </div>`;
+            
+            document.getElementById('orderSummary').innerHTML = orderSummary;
+            
+            // Close cart modal and show thank you modal
+            closeCart();
+            document.getElementById('thankYouModal').style.display = 'block';
+            
+            // Reset cart
+            cart = [];
+            cartCount = 0;
+            updateCartDisplay();
+            document.getElementById('tableNumber').value = '';
+        }
+
+        function closeThankYou() {
+            document.getElementById('thankYouModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const cartModal = document.getElementById('cartModal');
+            const thankYouModal = document.getElementById('thankYouModal');
+            
+            if (event.target === cartModal) {
+                closeCart();
+            }
+            if (event.target === thankYouModal) {
+                closeThankYou();
+            }
+        }
+
+        // Initialize cart display
+        updateCartDisplay();
+    </script>
+</body>
+</html>
