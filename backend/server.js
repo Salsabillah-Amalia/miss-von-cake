@@ -31,6 +31,7 @@ let products = [
         category: 'bestseller',
         stock: 30
     },
+    
     {
         id: 3,
         name: 'Whoopie Pie Chocolate',
@@ -92,7 +93,7 @@ let products = [
         image: 'images/lovely-cookies.jpg',
         description: 'Cookies manis dengan bentuk hati dan dekorasi yang menggemaskan',
         category: 'all',
-        stock: 60
+        stock: 0
     },
     {
         id: 10,
