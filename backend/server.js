@@ -20,7 +20,9 @@ let products = [
         image: 'images/strawberry-chiffon-cake.jpg',
         description: 'Kue chiffon lembut dengan topping strawberry segar dan whipped cream',
         category: 'bestseller',
-        stock: 50
+        stock: 50,
+        rating: 4.8,
+        totalReviews: 124
     },
     {
         id: 2,
@@ -29,7 +31,9 @@ let products = [
         image: 'images/lotus-biscoff-cheesecake.jpg',
         description: 'Cheesecake creamy dengan crumble lotus biscoff yang renyah',
         category: 'bestseller',
-        stock: 30
+        stock: 30,
+        rating: 4.9,
+        totalReviews: 98,
     },
     
     {
@@ -39,7 +43,9 @@ let products = [
         image: 'images/whoopie-pie-chocolate.jpg',
         description: 'Kue sandwich coklat dengan filling cream cheese yang lembut',
         category: 'bestseller',
-        stock: 40
+        stock: 40,
+         rating: 4.7,
+        totalReviews: 76
     },
     {
         id: 4,
@@ -48,7 +54,9 @@ let products = [
         image: 'images/strawberry-shortcake.jpg',
         description: 'Kue spons lembut berlapis whipped cream dan strawberry segar',
         category: 'all',
-        stock: 20
+        stock: 20,
+         rating: 4.6,
+        totalReviews: 45
     },
     {
         id: 5,
@@ -57,7 +65,9 @@ let products = [
         image: 'images/chocolate-cupcake.jpg',
         description: 'Cupcake coklat dengan frosting buttercream dan topping cherry',
         category: 'all',
-        stock: 35
+        stock: 35,
+        rating: 4.5,
+        totalReviews: 67
     },
     {
         id: 6,
@@ -66,7 +76,9 @@ let products = [
         image: 'images/choco-sponge-cake.jpg',
         description: 'Kue spons coklat dengan lapisan cream dan hiasan buah',
         category: 'all',
-        stock: 25
+        stock: 25,
+        rating: 4.4,
+        totalReviews: 32
     },
     {
         id: 7,
@@ -75,7 +87,9 @@ let products = [
         image: 'images/rainbow-macaron.jpg',
         description: 'Set macaron warna-warni dengan berbagai rasa dalam satu box',
         category: 'all',
-        stock: 45
+        stock: 45,
+        rating: 4.7,
+        totalReviews: 89
     },
     {
         id: 8,
@@ -84,7 +98,9 @@ let products = [
         image: 'images/matcha-berry-shortcake.jpg',
         description: 'Perpaduan matcha dan berry dalam kue yang menyegarkan',
         category: 'all',
-        stock: 30
+        stock: 30,
+        rating: 4.3,
+        totalReviews: 28
     },
     {
         id: 9,
@@ -93,7 +109,9 @@ let products = [
         image: 'images/lovely-cookies.jpg',
         description: 'Cookies manis dengan bentuk hati dan dekorasi yang menggemaskan',
         category: 'all',
-        stock: 0
+        stock: 0,
+        rating: 4.2,
+        totalReviews: 15
     },
     {
         id: 10,
@@ -102,7 +120,9 @@ let products = [
         image: 'images/pudding-caramel.jpg',
         description: 'Pudding lembut dengan saus caramel yang manis',
         category: 'all',
-        stock: 40
+        stock: 40,
+        rating: 4.1,
+        totalReviews: 52
     },
     {
         id: 11,
@@ -111,7 +131,9 @@ let products = [
         image: 'images/mixed-donuts.jpg',
         description: 'Paket donut dengan berbagai topping dan rasa dalam satu box',
         category: 'all',
-        stock: 15
+        stock: 15,
+        rating: 4.6,
+        totalReviews: 38
     }
 ];
 
@@ -398,6 +420,81 @@ app.get('/api/dashboard/stats', (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Gagal mengambil statistik',
+            error: error.message
+        });
+    }
+});
+
+// POST - Tambah rating untuk produk
+app.post('/api/products/:id/rating', (req, res) => {
+    try {
+        const productId = parseInt(req.params.id);
+        const { rating, review } = req.body;
+        
+        // Validasi input
+        if (!rating || rating < 1 || rating > 5) {
+            return res.status(400).json({
+                success: false,
+                message: 'Rating harus antara 1-5'
+            });
+        }
+        
+        const product = products.find(p => p.id === productId);
+        
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Produk tidak ditemukan'
+            });
+        }
+        
+        // Hitung rata-rata rating baru
+        const currentTotal = product.rating * product.totalReviews;
+        const newTotalReviews = product.totalReviews + 1;
+        const newRating = (currentTotal + rating) / newTotalReviews;
+        
+        // Update produk
+        product.rating = Math.round(newRating * 10) / 10; // Bulatkan ke 1 desimal
+        product.totalReviews = newTotalReviews;
+        
+        res.json({
+            success: true,
+            data: {
+                productId: productId,
+                newRating: product.rating,
+                totalReviews: product.totalReviews
+            },
+            message: 'Rating berhasil ditambahkan'
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Gagal menambahkan rating',
+            error: error.message
+        });
+    }
+});
+
+// GET - Ambil produk berdasarkan rating tertinggi
+app.get('/api/products/top-rated', (req, res) => {
+    try {
+        const { limit = 5 } = req.query;
+        
+        const topRatedProducts = products
+            .filter(product => product.totalReviews > 0)
+            .sort((a, b) => b.rating - a.rating)
+            .slice(0, parseInt(limit));
+        
+        res.json({
+            success: true,
+            data: topRatedProducts,
+            message: 'Produk rating tertinggi berhasil diambil'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Gagal mengambil produk rating tertinggi',
             error: error.message
         });
     }

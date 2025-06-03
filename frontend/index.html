@@ -398,6 +398,155 @@
                 padding: 20px;
             }
         }
+
+        /* Rating Stars CSS - Tambahkan ini dalam section <style> yang sudah ada */
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.stars {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    font-size: 16px;
+    color: #ddd;
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: #ffd700;
+}
+
+.star.half-filled {
+    background: linear-gradient(90deg, #ffd700 50%, #ddd 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.rating-text {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.rating-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Rating Modal CSS */
+.rating-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1001;
+}
+
+.rating-modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.rating-stars-input {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.rating-star-input {
+    font-size: 35px;
+    color: #ddd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rating-star-input:hover,
+.rating-star-input.active {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+.rating-review-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #d63384;
+    border-radius: 10px;
+    font-size: 14px;
+    margin: 15px 0;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.rating-submit-btn {
+    background: #d63384;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.rating-submit-btn:hover {
+    background: #b02a5b;
+}
+
+.rating-cancel-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.rating-cancel-btn:hover {
+    background: #5a6268;
+}
+
+/* Top Rated Section */
+.top-rated-section {
+    background: linear-gradient(135deg, #fff9e6, #fff3cd);
+    padding: 40px 0;
+    margin: 40px 0;
+}
+
+.top-rated-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
     </style>
 </head>
 <body>
@@ -464,10 +613,70 @@
         </div>
     </div>
 
+    <!-- Rating Modal -->
+<div id="ratingModal" class="rating-modal">
+    <div class="rating-modal-content">
+        <h3 style="color: #d63384; margin-bottom: 20px;">Beri Rating</h3>
+        <p id="ratingProductName" style="font-weight: bold; margin-bottom: 20px;"></p>
+        
+        <div class="rating-stars-input" id="ratingStarsInput">
+            <span class="rating-star-input" data-rating="1">★</span>
+            <span class="rating-star-input" data-rating="2">★</span>
+            <span class="rating-star-input" data-rating="3">★</span>
+            <span class="rating-star-input" data-rating="4">★</span>
+            <span class="rating-star-input" data-rating="5">★</span>
+        </div>
+        
+        <textarea class="rating-review-input" id="ratingReview" placeholder="Tulis review Anda (opsional)"></textarea>
+        
+        <div>
+            <button class="rating-submit-btn" onclick="submitRating()">Kirim Rating</button>
+            <button class="rating-cancel-btn" onclick="closeRatingModal()">Batal</button>
+        </div>
+    </div>
+</div>
+
     <script>
         let cart = [];
         let cartCount = 0;
         let products = [];
+
+        // Tambahkan variabel global untuk rating
+let currentRatingProduct = null;
+let selectedRating = 0;
+
+// Function untuk membuat display rating bintang
+function createStarRating(rating, totalReviews) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let starsHTML = '';
+    
+    // Bintang penuh
+    for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<span class="star filled">★</span>';
+    }
+    
+    // Bintang setengah
+    if (hasHalfStar) {
+        starsHTML += '<span class="star half-filled">★</span>';
+    }
+    
+    // Bintang kosong
+    for (let i = 0; i < emptyStars; i++) {
+        starsHTML += '<span class="star">★</span>';
+    }
+    
+    return `
+        <div class="rating-container">
+            <div class="stars">${starsHTML}</div>
+            <span class="rating-text">${rating} (${totalReviews} review)</span>
+            <span class="rating-badge">${rating}</span>
+        </div>
+    `;
+}
+
 
         // API Base URL
         const API_BASE = '/api';
@@ -505,28 +714,175 @@
 
         // Create product card HTML
         function createProductCard(product) {
-            const isOutOfStock = product.stock <= 0;
+    const isOutOfStock = product.stock <= 0;
+    
+    return `
+        <div class="product-card">
+            <div class="product-image" style="background-image: url('${product.image}')">
+                <button class="add-btn" 
+                        onclick="addToCart(${product.id})" 
+                        ${isOutOfStock ? 'disabled' : ''}>
+                    ${isOutOfStock ? '×' : '+'}
+                </button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">${product.name}</div>
+                <div class="product-description">${product.description}</div>
+                ${createStarRating(product.rating, product.totalReviews)}
+                <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                <div class="stock-info ${isOutOfStock ? 'out-of-stock' : ''}">
+                    ${isOutOfStock ? 'Stok habis' : `Stok: ${product.stock}`}
+                </div>
+                <button onclick="openRatingModal(${product.id})" 
+                        style="background: #ffd700; color: #333; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-top: 8px;">
+                    ⭐ Beri Rating
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Function untuk membuka modal rating
+function openRatingModal(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    currentRatingProduct = product;
+    selectedRating = 0;
+    
+    document.getElementById('ratingProductName').textContent = product.name;
+    document.getElementById('ratingReview').value = '';
+    
+    // Reset stars
+    const stars = document.querySelectorAll('.rating-star-input');
+    stars.forEach(star => star.classList.remove('active'));
+    
+    document.getElementById('ratingModal').style.display = 'block';
+}
+
+// Function untuk menutup modal rating
+function closeRatingModal() {
+    document.getElementById('ratingModal').style.display = 'none';
+    currentRatingProduct = null;
+    selectedRating = 0;
+}
+
+// Function untuk handle klik rating bintang
+function setupRatingStars() {
+    const stars = document.querySelectorAll('.rating-star-input');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            selectedRating = parseInt(this.dataset.rating);
             
-            return `
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('${product.image}')">
-                        <button class="add-btn" 
-                                onclick="addToCart(${product.id})" 
-                                ${isOutOfStock ? 'disabled' : ''}>
-                            ${isOutOfStock ? '×' : '+'}
-                        </button>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-description">${product.description}</div>
-                        <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
-                        <div class="stock-info ${isOutOfStock ? 'out-of-stock' : ''}">
-                            ${isOutOfStock ? 'Stok habis' : `Stok: ${product.stock}`}
+            // Update visual stars
+            stars.forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+        
+        // Hover effect
+        star.addEventListener('mouseenter', function() {
+            const hoverRating = parseInt(this.dataset.rating);
+            stars.forEach((s, index) => {
+                if (index < hoverRating) {
+                    s.style.color = '#ffd700';
+                } else {
+                    s.style.color = '#ddd';
+                }
+            });
+        });
+    });
+    
+    // Reset hover effect when mouse leaves stars container
+    document.getElementById('ratingStarsInput').addEventListener('mouseleave', function() {
+        stars.forEach((s, index) => {
+            if (index < selectedRating) {
+                s.style.color = '#ffd700';
+            } else {
+                s.style.color = '#ddd';
+            }
+        });
+    });
+}
+
+// Function untuk submit rating
+async function submitRating() {
+    if (!currentRatingProduct || selectedRating === 0) {
+        alert('Mohon pilih rating!');
+        return;
+    }
+    
+    const review = document.getElementById('ratingReview').value.trim();
+    
+    try {
+        const response = await fetch(`${API_BASE}/products/${currentRatingProduct.id}/rating`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                rating: selectedRating,
+                review: review
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Terima kasih atas rating Anda!');
+            closeRatingModal();
+            
+            // Update produk di array lokal
+            const productIndex = products.findIndex(p => p.id === currentRatingProduct.id);
+            if (productIndex !== -1) {
+                products[productIndex].rating = result.data.newRating;
+                products[productIndex].totalReviews = result.data.totalReviews;
+            }
+            
+            // Re-render produk
+            renderProducts();
+        } else {
+            alert('Gagal mengirim rating: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error submitting rating:', error);
+        alert('Gagal mengirim rating. Periksa koneksi internet Anda.');
+    }
+}
+
+// Function untuk load dan render produk top rated
+async function loadTopRatedProducts() {
+    try {
+        const response = await fetch(`${API_BASE}/products/top-rated?limit=3`);
+        const result = await response.json();
+        
+        if (result.success && result.data.length > 0) {
+            // Tambahkan section top rated sebelum bestseller
+            const topRatedHTML = `
+                <section class="top-rated-section">
+                    <div class="container">
+                        <div class="top-rated-badge">⭐ Rating Tertinggi</div>
+                        <h2 class="section-title">Produk Rating Tertinggi</h2>
+                        <div class="products-grid">
+                            ${result.data.map(product => createProductCard(product)).join('')}
                         </div>
                     </div>
-                </div>
+                </section>
             `;
+            
+            // Insert sebelum section products-section
+            const productsSection = document.querySelector('.products-section');
+            productsSection.insertAdjacentHTML('beforebegin', topRatedHTML);
         }
+    } catch (error) {
+        console.error('Error loading top rated products:', error);
+    }
+}
 
         // Show error message
         function showError(message) {
@@ -766,10 +1122,20 @@
             }
         }
 
+        // Close rating modal when clicking outside
+    window.addEventListener('click', function(event) {
+  const ratingModal = document.getElementById('ratingModal');
+  if (event.target === ratingModal) {
+    closeRatingModal();
+  }
+});
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             loadProducts();
             updateCartDisplay();
+            setupRatingStars();
+            loadTopRatedProducts();
         });
     </script>
 </body>
